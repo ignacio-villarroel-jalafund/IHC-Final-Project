@@ -44,7 +44,7 @@ def handle_arduino(port):
                     device_id = port.replace("/", "_").strip("_")
 
                 for sensor, value in data.items():
-                    topic = f"home/{device_id}/{sensor}"
+                    topic = f"sensors/{device_id}/{sensor}"
                     payload = json.dumps(value) if isinstance(value, dict) else str(value)
                     client.publish(topic, payload)
                     print(f"[{port}] → Published to '{topic}': {payload}")

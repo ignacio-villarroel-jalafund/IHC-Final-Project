@@ -4,7 +4,7 @@ from collections import defaultdict
 
 MQTT_BROKER = "localhost"
 MQTT_PUERTO = 1883
-MQTT_TOPIC = "house/#"
+MQTT_TOPIC = "sensors/#"
 
 class DataService:
     def __init__(self):

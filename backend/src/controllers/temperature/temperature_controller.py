@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ...schemas.infrared import Temperature
+from ...schemas.temperature import Temperature
 from ...services.mqtt_data_service import data_service
 
 router = APIRouter()
