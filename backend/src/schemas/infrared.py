@@ -1,3 +1,4 @@
-class Infrared():
-    infrared: float
-    detection: bool
+from pydantic import BaseModel
+
+class Temperature(BaseModel):
+    temp: float
