@@ -1,0 +1,2 @@
+class Humidity():
+    humidity: float
