@@ -1,14 +1,14 @@
 import React from 'react';
 
 interface StatusIndicatorProps {
-  value: number; // Será la temperatura
+  value: number;
   thresholds: {
     warning: number;
     danger: number;
   };
 }
 
-const StatusIndicator: React.FC<StatusIndicatorProps> = ({ value, thresholds }) => {
+const DistanceStatusIndicator: React.FC<StatusIndicatorProps> = ({ value, thresholds }) => {
   let status = 'safe';
   let message = 'Seguro';
 
@@ -34,4 +34,4 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({ value, thresholds }) 
   );
 };
 
-export default StatusIndicator;
+export default DistanceStatusIndicator;

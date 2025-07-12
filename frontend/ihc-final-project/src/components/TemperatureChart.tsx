@@ -71,21 +71,19 @@ interface TemperatureGaugeProps {
   maxTemp?: number;
 }
 
-const TemperatureGauge: React.FC<TemperatureGaugeProps> = ({ temperature, maxTemp = 40 }) => {
-  // **NUEVO**: Llamamos a nuestra función para obtener el color dinámico
+const TemperatureChart: React.FC<TemperatureGaugeProps> = ({ temperature, maxTemp = 40 }) => {
   const gaugeColor = getGaugeColor(temperature, maxTemp);
   
   const data = {
     datasets: [
       {
         data: [temperature, maxTemp - temperature],
-        // **MODIFICADO**: Usamos los colores dinámicos que calculamos
         backgroundColor: [
-          gaugeColor.background,          // Color dinámico
-          'rgba(230, 230, 230, 0.5)', // Color para el fondo/resto
+          gaugeColor.background,
+          'rgba(230, 230, 230, 0.5)',
         ],
         borderColor: [
-          gaugeColor.border,              // Color dinámico
+          gaugeColor.border,
           'rgba(230, 230, 230, 0.3)',
         ],
         borderWidth: 1,
@@ -100,7 +98,7 @@ const TemperatureGauge: React.FC<TemperatureGaugeProps> = ({ temperature, maxTem
     responsive: true,
     maintainAspectRatio: true,
     animation: {
-        duration: 500, // Añadimos una animación suave para la transición de color
+        duration: 500,
     },
     cutout: '80%',
     plugins: {
@@ -116,4 +114,4 @@ const TemperatureGauge: React.FC<TemperatureGaugeProps> = ({ temperature, maxTem
   return <Doughnut data={data} options={options} plugins={[gaugeTextPlugin]} />;
 };
 
-export default TemperatureGauge;
+export default TemperatureChart;

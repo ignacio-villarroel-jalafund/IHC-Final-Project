@@ -1,8 +1,4 @@
-// src/services/apiService.ts
-
 const API_BASE_URL = 'http://127.0.0.1:8000/api/v1';
-
-// --- FUNCIONES DE API ESPECÍFICAS Y CORREGIDAS ---
 
 const getTemperature = async (): Promise<number> => {
   try {
@@ -10,10 +6,8 @@ const getTemperature = async (): Promise<number> => {
     if (!response.ok) {
       throw new Error(`Error en el endpoint /temperature: ${response.status}`);
     }
-    // Le decimos a TypeScript que esperamos un objeto con la clave "temp"
     const data: { temp: number } = await response.json();
     console.log('[API/getTemperature] Datos recibidos:', data);
-    // ¡Aquí está la corrección! Devolvemos data.temp
     return data.temp;
   } catch (error) {
     console.error("Error en getTemperature:", error);
@@ -29,7 +23,6 @@ const getHumidity = async (): Promise<number> => {
     }
     const data: { humidity: number } = await response.json();
     console.log('[API/getHumidity] Datos recibidos:', data);
-    // Devolvemos data.humidity
     return data.humidity;
   } catch (error) {
     console.error("Error en getHumidity:", error);
@@ -45,7 +38,6 @@ const getDistance = async (): Promise<number> => {
     }
     const data: { distance: number } = await response.json();
     console.log('[API/getDistance] Datos recibidos:', data);
-    // Devolvemos data.distance
     return data.distance;
   } catch (error) {
     console.error("Error en getDistance:", error);
@@ -61,7 +53,6 @@ const getIntruderAlarm = async (): Promise<number> => {
     }
     const data: { alarm_level: number } = await response.json();
     console.log('[API/getIntruderAlarm] Datos recibidos:', data);
-    // Devolvemos data.alarm_level
     return data.alarm_level;
   } catch (error) {
     console.error("Error en getIntruderAlarm:", error);
@@ -77,7 +68,6 @@ const getPersonDetector = async (): Promise<number> => {
     }
     const data: { detection_level: number } = await response.json();
     console.log('[API/getPersonDetector] Datos recibidos:', data);
-    // Devolvemos data.detection_level
     return data.detection_level;
   } catch (error) {
     console.error("Error en getPersonDetector:", error);
@@ -85,7 +75,6 @@ const getPersonDetector = async (): Promise<number> => {
   }
 };
 
-// Exportamos las funciones corregidas
 export const apiService = {
   getTemperature,
   getHumidity,

@@ -7,13 +7,10 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-// NUEVO: Definimos las props que recibirá el componente
 interface RealTimeChartProps {
   data: ChartData<'line'>;
 }
 
-// QUITAMOS: El useState y el useEffect de este componente.
-// Ahora es un componente de presentación puro.
 const RealTimeChart: React.FC<RealTimeChartProps> = ({ data }) => {
   const options: ChartOptions<'line'> = {
     responsive: true,
