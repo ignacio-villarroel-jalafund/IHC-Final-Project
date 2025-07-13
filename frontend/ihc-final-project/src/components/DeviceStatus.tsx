@@ -6,8 +6,8 @@ interface DeviceStatusProps {
 }
 
 const DeviceStatus: React.FC<DeviceStatusProps> = ({ intruderAlarmState, personDetectorState }) => {
-  const isAlarmActive = intruderAlarmState === 1.0;
-  const isPersonDetected = personDetectorState === 1.0;
+  const isAlarmActive = intruderAlarmState >= 750.0;
+  const isPersonDetected = personDetectorState >= 750.0;
 
   return (
     <div className="device-status-panel">

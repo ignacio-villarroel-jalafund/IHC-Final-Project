@@ -5,7 +5,7 @@ import json
 import threading
 
 SERIAL_PORTS = ['/dev/ttyACM0', '/dev/ttyUSB0']
-MQTT_BROKER = "localhost"
+MQTT_BROKER = "192.168.43.51"
 MQTT_PORT = 1883
 
 
@@ -58,6 +58,18 @@ def handle_arduino(port):
                 if "infrared_security" in data:
                     topic = f"sensors/{device_id}/intruder_alarm"
                     payload = str(data["infrared_security"])
+                    client.publish(topic, payload)
+                    print(f"[{port}] → Published to '{topic}': {payload}")
+                    
+                if "infrared_light" in data:
+                    topic = f"sensors/{device_id}/infrared_light"
+                    payload = str(data["infrared_light"])
+                    client.publish(topic, payload)
+                    print(f"[{port}] → Published to '{topic}': {payload}")
+                    
+                if "distance" in data:
+                    topic = f"sensors/{device_id}/distance"
+                    payload = str(data["distance"])
                     client.publish(topic, payload)
                     print(f"[{port}] → Published to '{topic}': {payload}")
 

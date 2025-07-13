@@ -70,7 +70,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 5000);
+    const intervalId = setInterval(fetchData, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -97,7 +97,7 @@ const Dashboard: React.FC = () => {
           
           <div className="dashboard-card">
             <h2>Proximidad del Sensor</h2>
-            <DistanceStatusIndicator value={distance} thresholds={{ warning: 10, danger: 5 }} />
+            <DistanceStatusIndicator value={distance} thresholds={{ warning: 200, danger: 100 }} />
           </div>
           
           <div className="dashboard-card">

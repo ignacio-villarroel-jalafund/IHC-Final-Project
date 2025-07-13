@@ -6,7 +6,7 @@ router = APIRouter()
 
 @router.get("/person-detector", response_model=PersonDetector)
 def get_person_detector_data():
-    detection_value = data_service.get_data("person_detector")
+    detection_value = data_service.get_data("infrared_light")
 
     if detection_value == "No data yet":
         raise HTTPException(status_code=404, detail="No data yet.")

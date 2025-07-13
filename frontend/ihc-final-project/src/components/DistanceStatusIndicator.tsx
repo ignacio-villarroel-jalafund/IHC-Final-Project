@@ -12,10 +12,10 @@ const DistanceStatusIndicator: React.FC<StatusIndicatorProps> = ({ value, thresh
   let status = 'safe';
   let message = 'Seguro';
 
-  if (value >= thresholds.danger) {
+  if (value <= thresholds.danger) {
     status = 'danger';
     message = 'Peligro';
-  } else if (value >= thresholds.warning) {
+  } else if (value <= thresholds.warning) {
     status = 'warning';
     message = 'Advertencia';
   }
