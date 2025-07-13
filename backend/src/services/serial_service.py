@@ -27,6 +27,17 @@ def handle_arduino(port):
         return
 
     while True:
+        if not arduino.is_open:
+            print(f"Serial port {port} is not open. Attempting to reconnect...")
+            try:
+                arduino.open()
+                time.sleep(2)
+                print(f"Reconnected to {port}")
+            except serial.SerialException as e:
+                print(f"Failed to reconnect to {port}: {e}")
+                time.sleep(5)
+                continue
+
         try:
             if arduino.in_waiting > 0:
                 received_line = arduino.readline().decode("utf-8", "ignore").strip()
@@ -34,26 +45,45 @@ def handle_arduino(port):
                 if not received_line:
                     continue
 
-                if received_line.endswith("}}"):
-                    received_line = received_line[:-1]
-
-                data = json.loads(received_line)
+                try:
+                    data = json.loads(received_line)
+                except json.JSONDecodeError:
+                    print(f"[{port}] → Invalid JSON received: {received_line}")
+                    continue
 
                 device_id = data.pop("src", None)
                 if not device_id:
                     device_id = port.replace("/", "_").strip("_")
 
-                for sensor, value in data.items():
-                    topic = f"sensors/{device_id}/{sensor}"
-                    payload = json.dumps(value) if isinstance(value, dict) else str(value)
+                if "infrared_security" in data:
+                    topic = f"sensors/{device_id}/intruder_alarm"
+                    payload = str(data["infrared_security"])
                     client.publish(topic, payload)
                     print(f"[{port}] → Published to '{topic}': {payload}")
 
-        except (json.JSONDecodeError, UnicodeDecodeError):
-            pass
+                if "external" in data and data["external"] != "N/A":
+                    external_data = data["external"]
+                    if isinstance(external_data, dict):
+                        if "humidity" in external_data:
+                            topic_hum = f"sensors/{device_id}/humidity"
+                            payload_hum = str(external_data["humidity"])
+                            client.publish(topic_hum, payload_hum)
+                            print(f"[{port}] → Published to '{topic_hum}': {payload_hum}")
+                        
+                        if "temperature" in external_data:
+                            topic_temp = f"sensors/{device_id}/temperature"
+                            payload_temp = str(external_data["temperature"])
+                            client.publish(topic_temp, payload_temp)
+                            print(f"[{port}] → Published to '{topic_temp}': {payload_temp}")
+                elif "external" in data and data["external"] == "N/A":
+                    client.publish(f"sensors/{device_id}/humidity", "N/A")
+                    client.publish(f"sensors/{device_id}/temperature", "N/A")
+                    print(f"[{port}] → Received N/A for external sensors.")
+
+
         except serial.SerialException as e:
             print(f"Serial port error on {port}: {e}")
-            break
+            arduino.close()
         except Exception as e:
             print(f"Unexpected error on {port}: {e}")
             time.sleep(5)

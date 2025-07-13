@@ -8,7 +8,8 @@ MQTT_TOPIC = "sensors/#"
 
 class DataService:
     def __init__(self):
-        self._data = defaultdict(lambda: 0)
+        self._data = defaultdict(lambda: "No data yet")
+        self._last_known_good_data = defaultdict(lambda: "No data yet")
         self._client = mqtt.Client()
         self._client.on_connect = self.on_connect
         self._client.on_message = self.on_message
@@ -24,15 +25,27 @@ class DataService:
         try:
             sensor = msg.topic.split('/')[-1]
             payload = msg.payload.decode()
-            
-            try:
-                self._data[sensor] = json.loads(payload)
-            except json.JSONDecodeError:
-                self._data[sensor] = float(payload)
 
-            print(f"data recived from topic: {msg.topic}, value: {self._data[sensor]}")
+            if payload == "N/A":
+                self._data[sensor] = self._last_known_good_data[sensor]
+                print(f"data received from topic: {msg.topic}, value: N/A, using last known good value: {self._data[sensor]}")
+            else:
+                try:
+                    try:
+                        value = json.loads(payload)
+                    except json.JSONDecodeError:
+                        value = float(payload)
+                    
+                    self._data[sensor] = value
+                    self._last_known_good_data[sensor] = value
+                    print(f"data received from topic: {msg.topic}, value: {self._data[sensor]}")
+
+                except (json.JSONDecodeError, ValueError) as e:
+                     print(f"Could not decode payload: {payload} from topic: {msg.topic}")
+                
         except Exception as e:
             print(f"mqtt error: {e}")
+
 
     def start(self):
         try:
