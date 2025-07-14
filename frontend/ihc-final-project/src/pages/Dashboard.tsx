@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ChartData } from 'chart.js';
 
-import RealTimeChart from '../components/HumidityChart';
+import HumidityChart from '../components/HumidityChart';
 import TemperatureChart from '../components/TemperatureChart';
 import DeviceStatus from '../components/DeviceStatus';
 import DistanceStatusIndicator from '../components/DistanceStatusIndicator';
@@ -14,6 +14,7 @@ const Dashboard: React.FC = () => {
   const [distance, setDistance] = useState(0);
   const [intruderAlarm, setIntruderAlarm] = useState(0);
   const [personDetector, setPersonDetector] = useState(0);
+  const [chartKey, setChartKey] = useState(0);
 
   const [lineChartData, setLineChartData] = useState<ChartData<'line'>>({
     labels: [],
@@ -27,7 +28,6 @@ const Dashboard: React.FC = () => {
   });
 
   useEffect(() => {
-    
     const fetchData = async () => {
       const results = await Promise.allSettled([
         apiService.getTemperature(),
@@ -75,6 +75,18 @@ const Dashboard: React.FC = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setChartKey(prevKey => prevKey + 1);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -85,14 +97,14 @@ const Dashboard: React.FC = () => {
         <div className="main-content">
           <div className="dashboard-card chart-card">
             <h2>Historial de Humedad</h2>
-            <RealTimeChart data={lineChartData} />
+            <HumidityChart key={chartKey} data={lineChartData} />
           </div>
         </div>
 
         <aside className="sidebar-content">
           <div className="dashboard-card">
             <h2>Temperatura</h2>
-            <TemperatureChart temperature={temperature} maxTemp={100} />
+            <TemperatureChart key={chartKey + 1} temperature={temperature} maxTemp={100} />
           </div>
           
           <div className="dashboard-card">

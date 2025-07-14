@@ -11,45 +11,36 @@ import {
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// --- FUNCIÓN AUXILIAR PARA CALCULAR EL COLOR ---
-// Esta función crea una transición suave de verde -> amarillo -> rojo.
 const getGaugeColor = (temperature: number, maxTemp: number): { background: string; border: string } => {
-  // Definimos nuestros colores clave en formato RGB
-  const green = { r: 0, g: 255, b: 0 };    // Verde puro
-  const yellow = { r: 255, g: 255, b: 0 }; // Amarillo
-  const red = { r: 255, g: 0, b: 0 };      // Rojo puro
+  const green = { r: 0, g: 255, b: 0 };   
+  const yellow = { r: 255, g: 255, b: 0 };
+  const red = { r: 255, g: 0, b: 0 };     
   
-  const midPoint = maxTemp / 2; // El punto medio (ej. 50 si maxTemp es 100)
+  const midPoint = maxTemp / 2;
   let r, g, b;
 
   if (temperature <= midPoint) {
-    // Estamos en el rango de Verde a Amarillo
     const percentage = temperature / midPoint;
     r = green.r + percentage * (yellow.r - green.r);
     g = green.g + percentage * (yellow.g - green.g);
     b = green.b + percentage * (yellow.b - green.b);
   } else {
-    // Estamos en el rango de Amarillo a Rojo
     const percentage = (temperature - midPoint) / midPoint;
     r = yellow.r + percentage * (red.r - yellow.r);
     g = yellow.g + percentage * (red.g - yellow.g);
     b = yellow.b + percentage * (red.b - yellow.b);
   }
   
-  // Redondeamos los valores y creamos los strings de color con opacidad
   r = Math.round(r);
   g = Math.round(g);
   b = Math.round(b);
 
   return {
-    background: `rgba(${r}, ${g}, ${b}, 0.9)`, // Color con opacidad para el fondo
-    border: `rgba(${r}, ${g}, ${b}, 1)`,       // Color sólido para el borde
+    background: `rgba(${r}, ${g}, ${b}, 0.9)`, 
+    border: `rgba(${r}, ${g}, ${b}, 1)`,      
   };
 };
-// ----------------------------------------------------
 
-
-// Plugin para dibujar el texto en el centro (sin cambios)
 const gaugeTextPlugin: Plugin<'doughnut'> = {
   id: 'gaugeText',
   beforeDraw: (chart) => {
@@ -96,7 +87,7 @@ const TemperatureChart: React.FC<TemperatureGaugeProps> = ({ temperature, maxTem
 
   const options: ChartOptions<'doughnut'> = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     animation: {
         duration: 500,
     },
@@ -111,7 +102,11 @@ const TemperatureChart: React.FC<TemperatureGaugeProps> = ({ temperature, maxTem
     },
   };
 
-  return <Doughnut data={data} options={options} plugins={[gaugeTextPlugin]} />;
+  return (
+    <div style={{ position: 'relative', height: '150px', width: '100%' }}>
+       <Doughnut data={data} options={options} plugins={[gaugeTextPlugin]} />
+    </div>
+  );
 };
 
 export default TemperatureChart;
