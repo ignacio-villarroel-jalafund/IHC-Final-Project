@@ -5,7 +5,7 @@ import json
 import threading
 
 SERIAL_PORTS = ['/dev/ttyACM0', '/dev/ttyUSB0']
-MQTT_BROKER = "192.168.43.51"
+MQTT_BROKER = "172.20.25.12"
 MQTT_PORT = 1883
 
 

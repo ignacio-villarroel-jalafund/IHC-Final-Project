@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import json
 from collections import defaultdict
 
-MQTT_BROKER = "192.168.43.51"
+MQTT_BROKER = "172.20.25.12"
 MQTT_PUERTO = 1883
 MQTT_TOPIC = "sensors/#"
 
